@@ -10,7 +10,7 @@ auths:
     priv_password: C0nt4cC3nt3r!!
     version: 3
   windows_v2c:
-    community: IUNGO-NO
+    community: IUNGO-NOC
     security_level: noAuthNoPriv
     auth_protocol: MD5
     priv_protocol: DES
