@@ -1,550 +1,82 @@
----
+# Este archivo generator.yml fue creado para snmp_exporter v0.29.
+# Asegúrese de que la versión de su generador coincida con la versión de su snmp_exporter.
+
 auths:
-  public_v1:
+  fortinet_v3:
+    version: 3
+    username: ContacCenter
+    password: C0nt4cC3nt3r!!
+    auth_protocol: SHA512
+    priv_protocol: AES
+    security_level: authPriv
+    priv_password: C0nt4cC3nt3r!!
+
+  cisco_v1:
     version: 1
-    community: IUNGO-NOC    
-  public_v2:
+    community: Soporte2021
+
+  cisco_v2:
     version: 2
-    community: IUNGO-NOC  
+    community: Soporte2021
+    
+  windows_v2:
+    version: 2
+    community: IUNGO-NOC    
+
 modules:
-  # SNMPv2-MIB for things like sysDescr, sysUpTime, etc.
-  system:
+  fortinet_fgt:
     walk:
-      - "SNMPv2-MIB::system"
-    lookups:
-      - source_indexes: [sysORIndex]
-        lookup: "SNMPv2-MIB::sysORDescr"
-  # Default IF-MIB interfaces table with ifIndex.
-  if_mib:
-    walk:
-      - "IF-MIB::interfaces"
-      - "IF-MIB::ifXTable"
+      - 1.3.6.1.2.1.1
+      - 1.3.6.1.4.1.12356.101.4.1
+      - 1.3.6.1.4.1.12356.101.7.2.1.1
+      - 1.3.6.1.4.1.12356.101.7.4.2
+      - 1.3.6.1.4.1.12356.101.11.2
+      - 1.3.6.1.4.1.12356.101.12
     lookups:
       - source_indexes: [ifIndex]
-        lookup: "IF-MIB::ifAlias"
+        lookup: ifDescr
       - source_indexes: [ifIndex]
-        # Disambiguate from PaloAlto PAN-COMMON-MIB::ifDescr.
-        lookup: "IF-MIB::ifDescr"
-      - source_indexes: [ifIndex]
-        # Disambiguate from Netscaler NS-ROOT-MIB::ifName.
-        lookup: "IF-MIB::ifName"
+        lookup: ifName
+      - source_indexes: [fgIntfVlanIndex]
+        lookup: fgIntfVlanName
     overrides:
-      ifAlias:
-        ignore: true # Lookup metric
       ifDescr:
-        ignore: true # Lookup metric
+        ignore: true
       ifName:
-        ignore: true # Lookup metric
-      ifType:
-        type: EnumAsInfo
-  # Default IP-MIB with ipv4InterfaceTable for example.
-  ip_mib:
-    walk: [ipv4InterfaceTable]
+        ignore: true
+      fgIntfVlanName:
+        ignore: true
 
-  readynas:
+  cisco_switch:
     walk:
-      - 1.3.6.1.4.1.4526               # Raid/Disks status
-
-# Cisco Wireless LAN Controller
-  cisco_wlc:
-    walk:
-      - 1.3.6.1.4.1.14179.2.1.1.1.38   # bsnDot11EssNumberofMobileStations
-      - 1.3.6.1.4.1.14179.2.2.2.1.2    # bsnAPIfType
-      - 1.3.6.1.4.1.14179.2.2.2.1.4    # bsnAPIfPhyChannelNumber
-      - 1.3.6.1.4.1.14179.2.2.2.1.15   # bsnApIfNoOfUsers
-      - 1.3.6.1.4.1.14179.2.2.6.1      # bsnAPIfDot11CountersTable
-      - 1.3.6.1.4.1.14179.2.2.13.1.3   # bsnAPIfLoadChannelUtilization
-      - 1.3.6.1.4.1.14179.2.2.15.1.21  # bsnAPIfDBNoisePower
-    lookups:
-      - source_indexes: [bsnDot11EssIndex]
-        lookup: bsnDot11EssSsid
-        drop_source_indexes: true
-      - source_indexes: [bsnAPDot3MacAddress]
-        lookup: bsnAPName
-        drop_source_indexes: true
-    overrides:
-      bsnAPName:
-        type: DisplayString
-
-  cisco_device:
-    walk:
-      - CISCO-PROCESS-MIB::cpmCPUTotal1minRev
-      - CISCO-PROCESS-MIB::cpmCPUTotal5minRev
-      - CISCO-MEMORY-POOL-MIB::ciscoMemoryPoolUsed
-      - CISCO-MEMORY-POOL-MIB::ciscoMemoryPoolFree
-      - CISCO-MEMORY-POOL-MIB::ciscoMemoryPoolType
-      - CISCO-MEMORY-POOL-MIB::ciscoMemoryPoolName
-      # 32bit counters (for ASA 9.18 and above or NX-OS)
-      - CISCO-ENHANCED-MEMPOOL-MIB::cempMemPoolUsed
-      - CISCO-ENHANCED-MEMPOOL-MIB::cempMemPoolFree
-      - CISCO-ENHANCED-MEMPOOL-MIB::cempMemPoolType
-      - CISCO-ENHANCED-MEMPOOL-MIB::cempMemPoolName
-      - CISCO-ENTITY-SENSOR-MIB::entSensorValueTable
-      - CISCO-ENTITY-FRU-CONTROL-MIB::cefcFRUPowerOperStatus
-      - CISCO-IMAGE-MIB::ciscoImageString
-      - CISCO-ENHANCED-IMAGE-MIB::ceImageTable
-    lookups:
-      - source_indexes: [entPhysicalIndex]
-        lookup: CISCO-ENTITY-SENSOR-MIB::entSensorScale
-      - source_indexes: [entPhysicalIndex]
-        lookup: CISCO-ENTITY-SENSOR-MIB::entSensorType
-      - source_indexes: [entPhysicalIndex]
-        lookup: ENTITY-MIB::entPhysicalName
-      - source_indexes: [ciscoMemoryPoolType]
-        lookup: ciscoMemoryPoolName
-      - source_indexes: [cempMemPoolIndex]
-        lookup: cempMemPoolType
-      - source_indexes: [cempMemPoolIndex]
-        lookup: cempMemPoolName
-    overrides:
-      entSensorScale:
-        ignore: true
-      entSensorType:
-        ignore: true
-      entSensorValueTimeStamp:
-        ignore: true
-      entSensorValueUpdateRate:
-        ignore: true
-      entSensorMeasuredEntity:
-        ignore: true
-      ciscoMemoryPoolType:
-        type: EnumAsInfo
-        ignore: true
-      cefcFRUPowerOperStatus:
-        type: EnumAsStateSet
-      ciscoMemoryPoolName:
-        type: DisplayString
-        ignore: true
-      cempMemPoolName:
-        type: DisplayString
-
-  cisco_fc_fe:
-    walk:
-      - CISCO-FC-FE-MIB::fcIfInvalidCrcs
-      - CISCO-FC-FE-MIB::fcIfFramesDiscard
-      - CISCO-FC-FE-MIB::fcIfInvalidTxWords
-      - CISCO-FC-FE-MIB::fcHCIfBBCreditTransistionToZero
-      - CISCO-FC-FE-MIB::fcHCIfBBCreditTransistionFromZero
-      - CISCO-FC-FE-MIB::fcIfTxWtAvgBBCreditTransitionToZero
-      - CISCO-FC-FE-MIB::fcIfTxWaitCount
-      - CISCO-FC-FE-MIB::fcIfCurrRxBbCredit
-      - CISCO-FC-FE-MIB::fcIfCurrTxBbCredit
+      - 1.3.6.1.2.1.1       # System (sysDescr, sysUpTime, etc.)
+      - 1.3.6.1.2.1.2       # Interfaces (ifTable)
+      - 1.3.6.1.2.1.31      # ifXTable (extended stats)
+      - 1.3.6.1.2.1.17      # BRIDGE-MIB (spanning-tree, etc.)
+      - 1.3.6.1.2.1.4       # IP-MIB (IP interfaces)
     lookups:
       - source_indexes: [ifIndex]
-        lookup: "IF-MIB::ifAlias"
-      - source_indexes: [ifIndex]
-        lookup: "IF-MIB::ifDescr"
-      - source_indexes: [ifIndex]
-        lookup: "IF-MIB::ifName"
-# D-Link managed switches (DES-3200)
-  dlink:
-    walk:
-      - AGENT-GENERAL-MIB::agentCPUutilization
-      - AGENT-GENERAL-MIB::agentDRAMutilizationTable
-    overrides:
-      agentDRAMutilizationUnitID:
-        ignore: true
-# APC/Schneider UPS Network Management Cards
-#
-# Note: older management cards only support SNMP v1 (AP9606 and
-# AP9607, possibly others). Older versions of the firmware may only
-# support v1 as well. If you only have newer cards you can switch to
-# version v2c or v3.
-#
-# The management cards have relatively slow processors so don't poll
-# very often and give a generous timeout to prevent spurious
-# errors. Alternatively you can eliminate the interface polling (OIDs
-# beginning with 1.3.6.1.2.1) to reduce the time taken for polling.
-#
-# MIB: https://download.schneider-electric.com/files?p_File_Name=powernet426.mib
-# Guide: http://www.apc.com/salestools/ASTE-6Z5QEY/ASTE-6Z5QEY_R0_EN.pdf
-# Download site: http://www.apc.com/us/en/tools/download/index.cfm
-  apcups:
-    walk:
-      - 1.3.6.1.4.1.318.1.1.1.2       # upsBattery
-      - 1.3.6.1.4.1.318.1.1.1.3       # upsInput
-      - 1.3.6.1.4.1.318.1.1.1.4       # upsOutput
-      - 1.3.6.1.4.1.318.1.1.1.7.2     # upsAdvTest
-      - 1.3.6.1.4.1.318.1.1.1.8.1     # upsCommStatus
-      - 1.3.6.1.4.1.318.1.1.1.12      # upsOutletGroups
-      - 1.3.6.1.4.1.318.1.1.10.2.3.2  # iemStatusProbesTable
-      - 1.3.6.1.4.1.318.1.1.26.4.3    # rPDU2DeviceStatusTable
-      - 1.3.6.1.4.1.318.1.1.26.6.3    # rPDU2PhaseStatusTable
-      - 1.3.6.1.4.1.318.1.1.26.8.3    # rPDU2BankStatusTable
-      - 1.3.6.1.4.1.318.1.1.26.10.2.2 # rPDU2SensorTempHumidityStatusTable
-    lookups:
-      - source_indexes: [upsOutletGroupStatusIndex]
-        lookup: upsOutletGroupStatusName
-        drop_source_indexes: true
-      - source_indexes: [iemStatusProbeIndex]
-        lookup: iemStatusProbeName
-        drop_source_indexes: true
-    overrides:
-      rPDU2BankStatusLoadState:
-        type: EnumAsStateSet
-      upsAdvBatteryCondition:
-        type: EnumAsStateSet
-      upsAdvBatteryChargingCurrentRestricted:
-        type: EnumAsStateSet
-      upsAdvBatteryChargerStatus:
-        type: EnumAsStateSet
-# Sophos XG
-#
-# Sophos XG MIBs can be found here:
-#   https://docs.sophos.com/nsg/sophos-firewall/MIB/SOPHOS-XG-MIB.zip
-#
-# Tested on Sophos XG v20
-#
-  sophos_xg:
-    walk:
-      - 1.3.6.1.4.1.2604.5.1.1 # sfosXGDeviceInfo
-      - 1.3.6.1.4.1.2604.5.1.2 # sfosXGDeviceStats
-      - 1.3.6.1.4.1.2604.5.1.3 # sfosXGServiceStatus
-      - 1.3.6.1.4.1.2604.5.1.4 # sfosXGHAStats
-      - 1.3.6.1.4.1.2604.5.1.5 # sfosXGLicenseDetails
-    overrides:
-      # Info
-      sfosCurrentDate:
-        type: ParseDateAndTime
-        datetime_pattern: "%a %b %d %H:%M:%S %Y"
-      # Services
-      sfosPoP3Service:
-        type: EnumAsStateSet
-      sfosImap4Service:
-        type: EnumAsStateSet
-      sfosSmtpService:
-        type: EnumAsStateSet
-      sfosFtpService:
-        type: EnumAsStateSet
-      sfosHttpService:
-        type: EnumAsStateSet
-      sfosAVService:
-        type: EnumAsStateSet
-      sfosASService:
-        type: EnumAsStateSet
-      sfosDNSService:
-        type: EnumAsStateSet
-      sfosHAService:
-        type: EnumAsStateSet
-      sfosIPSService:
-        type: EnumAsStateSet
-      sfosApacheService:
-        type: EnumAsStateSet
-      sfosNtpService:
-        type: EnumAsStateSet
-      sfosTomcatService:
-        type: EnumAsStateSet
-      sfosSSLVpnService:
-        type: EnumAsStateSet
-      sfosIPSecVpnService:
-        type: EnumAsStateSet
-      sfosDatabaseservice:
-        type: EnumAsStateSet
-      sfosNetworkService:
-        type: EnumAsStateSet
-      sfosGarnerService:
-        type: EnumAsStateSet
-      sfosDroutingService:
-        type: EnumAsStateSet
-      sfosSSHdService:
-        type: EnumAsStateSet
-      sfosDgdService:
-        type: EnumAsStateSet
-
-      # HA
-      sfosHAStatus:
-        type: EnumAsInfo
-      sfosDeviceCurrentAppKey:
-        ignore: true
-      sfosDevicePeerAppKey:
-        ignore: true
-      sfosDeviceCurrentHAState:
-        type: EnumAsStateSet
-      sfosDevicePeerHAState:
-        type: EnumAsStateSet
-      sfosDeviceLoadBalancing:
-        type: EnumAsInfo
-
-      # License
-      sfosBaseFWLicRegStatus:
-        type: EnumAsStateSet
-      sfosBaseFWLicExpiryDate:
-        type: ParseDateAndTime
-        datetime_pattern: "%b %d %Y"
-      sfosNetProtectionLicRegStatus:
-        type: EnumAsStateSet
-      sfosNetProtectionLicExpiryDate:
-        type: ParseDateAndTime
-        datetime_pattern: "%b %d %Y"
-      sfosWebProtectionLicRegStatus:
-        type: EnumAsStateSet
-      sfosWebProtectionLicExpiryDate:
-        type: ParseDateAndTime
-        datetime_pattern: "%b %d %Y"
-      sfosMailProtectionLicRegStatus:
-        type: EnumAsStateSet
-      sfosMailProtectionLicExpiryDate:
-        type: ParseDateAndTime
-        datetime_pattern: "%b %d %Y"
-      sfosWebServerProtectionLicRegStatus:
-        type: EnumAsStateSet
-      sfosWebServerProtectionLicExpiryDate:
-        type: ParseDateAndTime
-        datetime_pattern: "%b %d %Y"
-      sfosSandstromLicRegStatus:
-        type: EnumAsStateSet
-      sfosSandstromLicExpiryDate:
-        type: ParseDateAndTime
-        datetime_pattern: "%b %d %Y"
-      sfosEnhancedSupportLicRegStatus:
-        type: EnumAsStateSet
-      sfosEnhancedSupportLicExpiryDate:
-        type: ParseDateAndTime
-        datetime_pattern: "%b %d %Y"
-      sfosEnhancedPlusLicRegStatus:
-        type: EnumAsStateSet
-      sfosEnhancedPlusLicExpiryDate:
-        type: ParseDateAndTime
-        datetime_pattern: "%b %d %Y"
-      sfosCentralOrchestrationLicRegStatus:
-        type: EnumAsStateSet
-      sfosCentralOrchestrationLicExpiryDate:
-        type: ParseDateAndTime
-        datetime_pattern: "%b %d %Y"
-# UCD-SNMP-MIB
-#
-# University of California, Davis extensions. Commonly used for host
-# metrics. For example, Linux-based systems, DD-WRT, Synology,
-# Mikrotik, Kemp LoadMaster, etc.
-#
-# http://www.net-snmp.org/docs/mibs/UCD-SNMP-MIB.txt
-#
-  ucd_la_table:
-    walk:
-      - 1.3.6.1.4.1.2021.10.1.2 # laNames
-      - 1.3.6.1.4.1.2021.10.1.5 # laLoadInt
-      - 1.3.6.1.4.1.2021.10.1.6 # laLoadFloat
-    lookups:
-      - source_indexes: [laIndex]
-        lookup: laNames
-        drop_source_indexes: true
-  ucd_memory:
-    walk:
-      - 1.3.6.1.4.1.2021.4 # memory
-  ucd_system_stats:
-    walk:
-      - 1.3.6.1.4.1.2021.11 # systemStats
-
-# Ubiquiti / AirFiber
-#
-# https://www.ui.com/downloads/firmwares/airfiber5X/v4.0.5/UBNT-MIB.txt
-#
-  ubiquiti_airfiber:
-    walk:
-      - 1.3.6.1.4.1.41112.1.3 #ubntAirFiber
-
-# Ubiquiti / AirMAX
-#
-# https://dl.ubnt.com/firmwares/airos-ubnt-mib/ubnt-mib.zip
-#
-  ubiquiti_airmax:
-    walk:
-      - 1.3.6.1.4.1.41112.1.4 # ubntAirMAX
-
-# Ubiquiti / AirOS (nanoStation etc, old firmwares)
-  ubiquiti_airos:
-    walk:
-      - FROGFOOT-RESOURCES-MIB::loadTable
-      - FROGFOOT-RESOURCES-MIB::memory
-    lookups:
-      - source_indexes: [loadIndex]
-        lookup: "FROGFOOT-RESOURCES-MIB::loadDescr"
-    overrides:
-      loadIndex:
-        ignore: true # Lookup metric
-      loadDescr:
-        ignore: true
-        
-
-# Ubiquiti / UniFi
-#
-# http://dl.ubnt-ut.com/snmp/UBNT-MIB
-# http://dl.ubnt-ut.com/snmp/UBNT-UniFi-MIB
-#
-  ubiquiti_unifi:
-    walk:
-      - 1.3.6.1.4.1.41112.1.6 # ubntUniFi
-    lookups:
-      - source_indexes: [unifiVapIndex]
-        lookup: unifiVapName
-      - source_indexes: [unifiVapIndex]
-        lookup: unifiVapEssId
-# Mikrotik Router
-#
-# http://download2.mikrotik.com/Mikrotik.mib
-  mikrotik:
-    walk:
-      - "MIKROTIK-MIB::mikrotik"
-    lookups:
+        lookup: ifDescr
       - source_indexes: [ifIndex]
         lookup: ifName
-      - source_indexes: [mtxrInterfaceStatsIndex]
-        lookup: ifName
-      - source_indexes: [mtxrGaugeIndex]
-        lookup: mtxrGaugeName
-        drop_source_indexes: true
-      - source_indexes: [mtxrNeighborIndex]
-        lookup: mtxrNeighborMacAddress
-        drop_source_indexes: true
-      - source_indexes: [mtxrNeighborIndex]
-        lookup: mtxrNeighborInterfaceID
-      - source_indexes: [mtxrNeighborInterfaceID]
-        lookup: ifName
-        drop_source_indexes: true
-      - source_indexes: [mtxrOpticalIndex]
-        lookup: mtxrOpticalName
-      - source_indexes: [mtxrPOEInterfaceIndex]
-        lookup: mtxrPOEName
-      - source_indexes: [mtxrPartitionIndex]
-        lookup: mtxrPartitionName
-      - source_indexes: [mtxrRemoteCapId]
-        lookup: mtxrRemoteCapIdentity
-        drop_source_indexes: true
-      - source_indexes: [mtxrWifiInterfacesId]
-        lookup: ifName
-        drop_source_indexes: true
-      - source_indexes: [mtxrWifiRegistrationInterface]
-        lookup: ifName
-        drop_source_indexes: true
     overrides:
-      mtxrRemoteCapIdentity:
-        ignore: true # information is redundant
-      mtxrWifiInterfacesName:
-        ignore: true # information is redundant
-      mtxrWifiRegistrationMacAddress:
-        ignore: true # information is redundant
-# HOST-RESOURCES-MIB
-#
-# http://www.net-snmp.org/docs/mibs/host.html
-  hrSystem:
-    walk:
-      - "HOST-RESOURCES-MIB::hrSystem"
-  hrStorage:
-    walk:
-      - "HOST-RESOURCES-MIB::hrStorage"
-    lookups:
-      - source_indexes: [hrStorageIndex]
-        lookup: "HOST-RESOURCES-MIB::hrStorageDescr"
-      - source_indexes: [hrStorageIndex]
-        lookup: "HOST-RESOURCES-MIB::hrStorageType"
-    overrides:
-      hrStorageIndex:
+      ifDescr:
         ignore: true
-      hrStorageType:
+      ifName:
         ignore: true
-      hrStorageDescr:
-        ignore: true
-  hrDevice:
+
+  windows_server:
     walk:
-      - "HOST-RESOURCES-MIB::hrDevice"
-    lookups:
-      - source_indexes: [hrDeviceIndex]
-        lookup: "HOST-RESOURCES-MIB::hrDeviceDescr"
-      - source_indexes: [hrDeviceIndex]
-        lookup: "HOST-RESOURCES-MIB::hrDeviceType"
-    overrides:
-      # Remap enums where 1==true, 2==false to become 0==false, 1==true.
-      hrDiskStorageRemoveble:
-        scale: -1.0
-        offset: 2.0
-      hrPrinterStatus:
-        type: EnumAsStateSet
-      hrDeviceIndex:
-        ignore: true
-      hrDeviceType:
-        ignore: true
-      hrDeviceDescr:
-        ignore: true
-      hrProcessorFrwID:
-        ignore: true
-  hrSWRun:
-    walk:
-      - "HOST-RESOURCES-MIB::hrSWRun"
-  hrSWRunPerf:
-    walk:
-      - "HOST-RESOURCES-MIB::hrSWRunPerf"
-  hrSWInstalled:
-    walk:
-      - "HOST-RESOURCES-MIB::hrSWInstalled"
-  # tplink ddm information for sfps
-  # 
-  # Downloads can be found here:
-  # https://www.tp-link.com/en/support/download/tl-sg3428x/
-  #
-  # tested against TL SG3428X 
-  tplink-ddm:
-    walk:
-      - ddmStatusBiasCurrent
-      - ddmStatusLossSignal
-      - ddmStatusRxPow
-      - ddmStatusTemperature
-      - ddmStatusTxFault
-      - ddmStatusTxPow
-      - ddmStatusVoltage
+      - 1.3.6.1.2.1.1               # System (sysDescr, sysUpTime)
+      - 1.3.6.1.2.1.2               # Interfaces (ifTable)
+      - 1.3.6.1.2.1.31              # ifXTable (estadísticas extendidas)
+      - 1.3.6.1.2.1.25.1            # hrSystem (uptime, usuarios)
+      - 1.3.6.1.2.1.25.2            # hrStorage (memoria, discos)
+      - 1.3.6.1.2.1.25.3.3.1        # hrProcessorLoad (CPU)
+      - 1.3.6.1.2.1.25.4.2.1        # hrSWRun (procesos)
     lookups:
       - source_indexes: [ifIndex]
-        lookup: ifAlias
-      - source_indexes: [ifIndex]
-        lookup: "IF-MIB::ifName"
+        lookup: ifDescr
     overrides:
-      ddmStatusBiasCurrent:
-        type: DisplayString
-        regex_extracts:
-          '':
-            - regex: '^(\d+\.\d+).*'
-              value: '$1'
-      ddmStatusLossSignal:
-        type: DisplayString
-        regex_extracts:
-          '':
-            - regex: 'False'
-              value: '0'
-            - regex: 'True'
-              value: '1'
-      ddmStatusRxPow:
-        type: DisplayString
-        regex_extracts:
-          '':
-            - regex: '^(\d+\.\d+).*'
-              value: '$1'
-      ddmStatusTemperature:
-        type: DisplayString
-        regex_extracts:
-          '':
-            - regex: '^(\d+\.\d+).*'
-              value: '$1'
-      ddmStatusTxFault:
-        type: DisplayString
-        regex_extracts:
-          '':
-            - regex: 'False'
-              value: '0'
-            - regex: 'True'
-              value: '1'
-      ddmStatusTxPow:
-        type: DisplayString
-        regex_extracts:
-          '':
-            - regex: '^(\d+\.\d+).*'
-              value: '$1'
-      ddmStatusVoltage:
-        type: DisplayString
-        regex_extracts:
-          '':
-            - regex: '^(\d+\.\d+).*'
-              value: '$1'
-  cisco_imc:
-    walk:
-    - 1.3.6.1.4.1.9.9.719.1.45.1.1.6  #cucsStorageControllerOperState
-    - 1.3.6.1.4.1.9.9.719.1.1.1.1.11  #cucsFaultDescription
-    - 1.3.6.1.4.1.9.9.719.1.1.1.1.20  #cucsFaultSeverity
+      ifDescr:
+        ignore: true
