@@ -27,6 +27,10 @@ auths:
     version: 2
     community: congeresa
 
+  apc_ups_v1:
+    version: 1
+    community: IUNGO-NOC
+
 modules:
   fortinet_fgt:
     walk:
@@ -53,11 +57,11 @@ modules:
 
   cisco_switch:
     walk:
-      - 1.3.6.1.2.1.1       # System (sysDescr, sysUpTime, etc.)
-      - 1.3.6.1.2.1.2       # Interfaces (ifTable)
-      - 1.3.6.1.2.1.31      # ifXTable (extended stats)
-      - 1.3.6.1.2.1.17      # BRIDGE-MIB (spanning-tree, etc.)
-      - 1.3.6.1.2.1.4       # IP-MIB (IP interfaces)
+      - 1.3.6.1.2.1.1         # System (sysDescr, sysUpTime, etc.)
+      - 1.3.6.1.2.1.2         # Interfaces (ifTable)
+      - 1.3.6.1.2.1.31        # ifXTable (extended stats)
+      - 1.3.6.1.2.1.17        # BRIDGE-MIB (spanning-tree, etc.)
+      - 1.3.6.1.2.1.4         # IP-MIB (IP interfaces)
       - 1.3.6.1.4.1.9.9.13.1.3 #CISCO-ENVMON-MIB (Temperatura)
       - 1.3.6.1.4.1.9.9.13.1.5 #CISCO-ENVMON-MIB (Power Supply Status)
       - 1.3.6.1.4.1.9.9.13.1.4 #CISCO-ENVMON-MIB (Fan Status)
@@ -79,16 +83,38 @@ modules:
 
   windows_server:
     walk:
-      - 1.3.6.1.2.1.1               # System (sysDescr, sysUpTime)
-      - 1.3.6.1.2.1.2               # Interfaces (ifTable)
-      - 1.3.6.1.2.1.31              # ifXTable (estadísticas extendidas)
-      - 1.3.6.1.2.1.25.1            # hrSystem (uptime, usuarios)
-      - 1.3.6.1.2.1.25.2            # hrStorage (memoria, discos)
-      - 1.3.6.1.2.1.25.3.3.1        # hrProcessorLoad (CPU)
-      - 1.3.6.1.2.1.25.4.2.1        # hrSWRun (procesos)
+      - 1.3.6.1.2.1.1           # System (sysDescr, sysUpTime)
+      - 1.3.6.1.2.1.2           # Interfaces (ifTable)
+      - 1.3.6.1.2.1.31          # ifXTable (estadísticas extendidas)
+      - 1.3.6.1.2.1.25.1        # hrSystem (uptime, usuarios)
+      - 1.3.6.1.2.1.25.2        # hrStorage (memoria, discos)
+      - 1.3.6.1.2.1.25.3.3.1    # hrProcessorLoad (CPU)
+      - 1.3.6.1.2.1.25.4.2.1    # hrSWRun (procesos)
     lookups:
       - source_indexes: [ifIndex]
         lookup: ifDescr
     overrides:
       ifDescr:
+        ignore: true
+# Módulo para UPS APC
+  apc_ups:
+    walk:
+      - 1.3.6.1.2.1.1           # System (sysDescr, sysUpTime)
+      - 1.3.6.1.2.1.33          # UPS-MIB (RFC1628) - OIDs generales de UPS
+      - 1.3.6.1.2.1.33.1.2      # upsIdent - Información de identificación de UPS
+      - 1.3.6.1.2.1.33.1.3      # upsBattery - Información de batería
+      - 1.3.6.1.2.1.33.1.4      # upsInput - Información de entrada de energía
+      - 1.3.6.1.2.1.33.1.5      # upsOutput - Información de salida de energía
+      - 1.3.6.1.2.1.33.1.6      # upsBypass - Información de bypass
+      - 1.3.6.1.2.1.33.1.7      # upsAlarms - Alarmas de UPS
+    lookups:
+      # Puedes añadir lookups si hay tablas dentro de los OIDs de UPS que quieras describir
+      # Por ejemplo, si hay múltiples baterías o entradas/salidas y quieres sus descripciones.
+      # Para los OIDs comunes de UPS, no siempre son necesarios lookups complejos.
+      - source_indexes: [upsBInputPhase] # Ejemplo, si hubiera una tabla de fases de entrada
+        lookup: upsBInputSource # Ejemplo de OID descriptivo
+    overrides:
+      # Puedes añadir overrides si hay métricas que quieres ignorar o renombrar
+      # Por ejemplo, si upsIdentManufacturer es demasiado redundante.
+      upsIdentManufacturer:
         ignore: true
