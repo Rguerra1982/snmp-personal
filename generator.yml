@@ -4,12 +4,12 @@
 auths:
   fortinet_v3:
     version: 3
-    username: ContacCenter
-    password: C0nt4cC3nt3r!!
-    auth_protocol: SHA512
-    priv_protocol: AES
-    security_level: authPriv
-    priv_password: C0nt4cC3nt3r!!
+  security_level: authPriv
+  username: ContacCenter
+  password: C0nt4cC3nt3r!!
+  auth_protocol: SHA512
+  priv_protocol: AES
+  priv_password: C0nt4cC3nt3r!!
 
   cisco_v1:
     version: 1
