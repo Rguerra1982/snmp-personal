@@ -5761,12 +5761,12 @@ modules:
   fortinet_fgt:
     walk:
     - 1.3.6.1.2.1.1
+    - 1.3.6.1.2.1.2.2.1.10
+    - 1.3.6.1.2.1.2.2.1.16
+    - 1.3.6.1.2.1.2.2.1.2
     - 1.3.6.1.2.1.31.1.1.1.1
-    - 1.3.6.1.4.1.12356.101.11.2
-    - 1.3.6.1.4.1.12356.101.12
     - 1.3.6.1.4.1.12356.101.4.1
     - 1.3.6.1.4.1.12356.101.7.2.1.1
-    - 1.3.6.1.4.1.12356.101.7.4.2
     - 1.3.6.1.4.1.25461.2.1.2.3.11.1.2
     metrics:
     - name: sysDescr
@@ -5840,438 +5840,44 @@ modules:
       indexes:
       - labelname: sysORIndex
         type: gauge
-    - name: fgIpSessIndex
-      oid: 1.3.6.1.4.1.12356.101.11.2.1.1.1
-      type: gauge
-      help: An index value that uniquely identifies an IP session within the fgIpSessTable
-        - 1.3.6.1.4.1.12356.101.11.2.1.1.1
-      indexes:
-      - labelname: fgIpSessIndex
-        type: gauge
-    - name: fgIpSessProto
-      oid: 1.3.6.1.4.1.12356.101.11.2.1.1.2
-      type: gauge
-      help: The protocol the session is using (IP, TCP, UDP, etc.) - 1.3.6.1.4.1.12356.101.11.2.1.1.2
-      indexes:
-      - labelname: fgIpSessIndex
-        type: gauge
-      enum_values:
-        0: ip
-        1: icmp
-        2: igmp
-        4: ipip
-        6: tcp
-        8: egp
-        12: pup
-        17: udp
-        22: idp
-        41: ipv6
-        46: rsvp
-        47: gre
-        50: esp
-        51: ah
-        89: ospf
-        103: pim
-        108: comp
-        255: raw
-    - name: fgIpSessFromAddr
-      oid: 1.3.6.1.4.1.12356.101.11.2.1.1.3
-      type: InetAddressIPv4
-      help: Source IP address (IPv4 only) of the session - 1.3.6.1.4.1.12356.101.11.2.1.1.3
-      indexes:
-      - labelname: fgIpSessIndex
-        type: gauge
-    - name: fgIpSessFromPort
-      oid: 1.3.6.1.4.1.12356.101.11.2.1.1.4
-      type: gauge
-      help: Source port number (UDP and TCP only) of the session - 1.3.6.1.4.1.12356.101.11.2.1.1.4
-      indexes:
-      - labelname: fgIpSessIndex
-        type: gauge
-    - name: fgIpSessToAddr
-      oid: 1.3.6.1.4.1.12356.101.11.2.1.1.5
-      type: InetAddressIPv4
-      help: Destination IP address (IPv4 only) of the session - 1.3.6.1.4.1.12356.101.11.2.1.1.5
-      indexes:
-      - labelname: fgIpSessIndex
-        type: gauge
-    - name: fgIpSessToPort
-      oid: 1.3.6.1.4.1.12356.101.11.2.1.1.6
-      type: gauge
-      help: Destination Port number (UDP and TCP only) of the session - 1.3.6.1.4.1.12356.101.11.2.1.1.6
-      indexes:
-      - labelname: fgIpSessIndex
-        type: gauge
-    - name: fgIpSessExp
-      oid: 1.3.6.1.4.1.12356.101.11.2.1.1.7
-      type: gauge
-      help: Number of seconds remaining before the session expires (if idle) - 1.3.6.1.4.1.12356.101.11.2.1.1.7
-      indexes:
-      - labelname: fgIpSessIndex
-        type: gauge
-    - name: fgIpSessVdom
-      oid: 1.3.6.1.4.1.12356.101.11.2.1.1.8
-      type: gauge
-      help: Virtual domain the session is part of - 1.3.6.1.4.1.12356.101.11.2.1.1.8
-      indexes:
-      - labelname: fgIpSessIndex
-        type: gauge
-    - name: fgIpSessNumber
-      oid: 1.3.6.1.4.1.12356.101.11.2.2.1.1
-      type: gauge
-      help: Current number of sessions on the virtual domain - 1.3.6.1.4.1.12356.101.11.2.2.1.1
-      indexes:
-      - labelname: fgVdEntIndex
-        type: gauge
-    - name: fgIp6SessNumber
-      oid: 1.3.6.1.4.1.12356.101.11.2.3.1.1
-      type: gauge
-      help: Current number of sessions on the virtual domain - 1.3.6.1.4.1.12356.101.11.2.3.1.1
-      indexes:
-      - labelname: fgVdEntIndex
-        type: gauge
-    - name: fgVpnTunnelUpCount
-      oid: 1.3.6.1.4.1.12356.101.12.1.1
-      type: gauge
-      help: The number of IPsec VPN tunnels with at least one SA - 1.3.6.1.4.1.12356.101.12.1.1
-    - name: fgVpnDialupIndex
-      oid: 1.3.6.1.4.1.12356.101.12.2.1.1.1
-      type: gauge
-      help: An index value that uniquely identifies an VPN dial-up peer within the
-        fgVpnDialupTable - 1.3.6.1.4.1.12356.101.12.2.1.1.1
-      indexes:
-      - labelname: fgVpnDialupIndex
-        type: gauge
-    - name: fgVpnDialupGateway
-      oid: 1.3.6.1.4.1.12356.101.12.2.1.1.2
-      type: InetAddressIPv4
-      help: Remote gateway IP address of the tunnel - 1.3.6.1.4.1.12356.101.12.2.1.1.2
-      indexes:
-      - labelname: fgVpnDialupIndex
-        type: gauge
-    - name: fgVpnDialupLifetime
-      oid: 1.3.6.1.4.1.12356.101.12.2.1.1.3
-      type: gauge
-      help: Tunnel life time (seconds) of the tunnel - 1.3.6.1.4.1.12356.101.12.2.1.1.3
-      indexes:
-      - labelname: fgVpnDialupIndex
-        type: gauge
-    - name: fgVpnDialupTimeout
-      oid: 1.3.6.1.4.1.12356.101.12.2.1.1.4
-      type: gauge
-      help: Time before the next key exchange (seconds) of the tunnel - 1.3.6.1.4.1.12356.101.12.2.1.1.4
-      indexes:
-      - labelname: fgVpnDialupIndex
-        type: gauge
-    - name: fgVpnDialupSrcBegin
-      oid: 1.3.6.1.4.1.12356.101.12.2.1.1.5
-      type: InetAddressIPv4
-      help: Remote subnet address of the tunnel - 1.3.6.1.4.1.12356.101.12.2.1.1.5
-      indexes:
-      - labelname: fgVpnDialupIndex
-        type: gauge
-    - name: fgVpnDialupSrcEnd
-      oid: 1.3.6.1.4.1.12356.101.12.2.1.1.6
-      type: InetAddressIPv4
-      help: Remote subnet mask of the tunnel - 1.3.6.1.4.1.12356.101.12.2.1.1.6
-      indexes:
-      - labelname: fgVpnDialupIndex
-        type: gauge
-    - name: fgVpnDialupDstAddr
-      oid: 1.3.6.1.4.1.12356.101.12.2.1.1.7
-      type: InetAddressIPv4
-      help: Local subnet address of the tunnel - 1.3.6.1.4.1.12356.101.12.2.1.1.7
-      indexes:
-      - labelname: fgVpnDialupIndex
-        type: gauge
-    - name: fgVpnDialupVdom
-      oid: 1.3.6.1.4.1.12356.101.12.2.1.1.8
-      type: gauge
-      help: Virtual domain tunnel is part of - 1.3.6.1.4.1.12356.101.12.2.1.1.8
-      indexes:
-      - labelname: fgVpnDialupIndex
-        type: gauge
-    - name: fgVpnDialupInOctets
-      oid: 1.3.6.1.4.1.12356.101.12.2.1.1.9
+    - name: ifInOctets
+      oid: 1.3.6.1.2.1.2.2.1.10
       type: counter
-      help: Number of bytes received on tunnel since instantiation. - 1.3.6.1.4.1.12356.101.12.2.1.1.9
+      help: The total number of octets received on the interface, including framing
+        characters - 1.3.6.1.2.1.2.2.1.10
       indexes:
-      - labelname: fgVpnDialupIndex
+      - labelname: ifIndex
         type: gauge
-    - name: fgVpnDialupOutOctets
-      oid: 1.3.6.1.4.1.12356.101.12.2.1.1.10
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: ifDescr
+        oid: 1.3.6.1.2.1.2.2.1.2
+        type: DisplayString
+      - labels:
+        - ifIndex
+        labelname: ifName
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
+    - name: ifOutOctets
+      oid: 1.3.6.1.2.1.2.2.1.16
       type: counter
-      help: Number of bytes sent on tunnel since instantiation. - 1.3.6.1.4.1.12356.101.12.2.1.1.10
+      help: The total number of octets transmitted out of the interface, including
+        framing characters - 1.3.6.1.2.1.2.2.1.16
       indexes:
-      - labelname: fgVpnDialupIndex
+      - labelname: ifIndex
         type: gauge
-    - name: fgVpnTunEntIndex
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.1
-      type: gauge
-      help: An index value that uniquely identifies a VPN tunnel within the fgVpnTunTable
-        - 1.3.6.1.4.1.12356.101.12.2.2.1.1
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntPhase1Name
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.2
-      type: DisplayString
-      help: Descriptive name of phase1 configuration for the tunnel - 1.3.6.1.4.1.12356.101.12.2.2.1.2
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntPhase2Name
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.3
-      type: DisplayString
-      help: Descriptive name of phase2 configuration for the tunnel - 1.3.6.1.4.1.12356.101.12.2.2.1.3
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntRemGwyIp
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.4
-      type: InetAddressIPv4
-      help: IP of remote gateway used by the tunnel - 1.3.6.1.4.1.12356.101.12.2.2.1.4
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntRemGwyPort
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.5
-      type: gauge
-      help: port of remote gateway used by tunnel, if UDP - 1.3.6.1.4.1.12356.101.12.2.2.1.5
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntLocGwyIp
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.6
-      type: InetAddressIPv4
-      help: IP of local gateway used by the tunnel - 1.3.6.1.4.1.12356.101.12.2.2.1.6
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntLocGwyPort
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.7
-      type: gauge
-      help: port of local gateway used by tunnel, if UDP - 1.3.6.1.4.1.12356.101.12.2.2.1.7
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntSelectorSrcBeginIp
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.8
-      type: InetAddressIPv4
-      help: Beginning of address range of source selector - 1.3.6.1.4.1.12356.101.12.2.2.1.8
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntSelectorSrcEndIp
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.9
-      type: InetAddressIPv4
-      help: End of address range of source selector - 1.3.6.1.4.1.12356.101.12.2.2.1.9
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntSelectorSrcPort
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.10
-      type: gauge
-      help: Source selector port - 1.3.6.1.4.1.12356.101.12.2.2.1.10
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntSelectorDstBeginIp
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.11
-      type: InetAddressIPv4
-      help: Beginning of address range of destination selector - 1.3.6.1.4.1.12356.101.12.2.2.1.11
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntSelectorDstEndIp
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.12
-      type: InetAddressIPv4
-      help: End of address range of destination selector - 1.3.6.1.4.1.12356.101.12.2.2.1.12
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntSelectorDstPort
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.13
-      type: gauge
-      help: Destination selector port - 1.3.6.1.4.1.12356.101.12.2.2.1.13
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntSelectorProto
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.14
-      type: gauge
-      help: Protocol number for selector - 1.3.6.1.4.1.12356.101.12.2.2.1.14
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntLifeSecs
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.15
-      type: gauge
-      help: Lifetime of tunnel in seconds, if time based lifetime used - 1.3.6.1.4.1.12356.101.12.2.2.1.15
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntLifeBytes
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.16
-      type: gauge
-      help: Lifetime of tunnel in bytes, if byte transfer based lifetime used - 1.3.6.1.4.1.12356.101.12.2.2.1.16
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntTimeout
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.17
-      type: gauge
-      help: Timeout of tunnel in seconds - 1.3.6.1.4.1.12356.101.12.2.2.1.17
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntInOctets
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.18
-      type: counter
-      help: Number of bytes received on tunnel - 1.3.6.1.4.1.12356.101.12.2.2.1.18
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntOutOctets
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.19
-      type: counter
-      help: Number of bytes sent out on tunnel - 1.3.6.1.4.1.12356.101.12.2.2.1.19
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnTunEntStatus
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.20
-      type: gauge
-      help: Current status of tunnel (up or down) - 1.3.6.1.4.1.12356.101.12.2.2.1.20
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-      enum_values:
-        1: down
-        2: up
-    - name: fgVpnTunEntVdom
-      oid: 1.3.6.1.4.1.12356.101.12.2.2.1.21
-      type: gauge
-      help: Virtual domain the tunnel is part of - 1.3.6.1.4.1.12356.101.12.2.2.1.21
-      indexes:
-      - labelname: fgVpnTunEntIndex
-        type: gauge
-    - name: fgVpnSslState
-      oid: 1.3.6.1.4.1.12356.101.12.2.3.1.1
-      type: gauge
-      help: Whether SSL-VPN is enabled on this virtual domain - 1.3.6.1.4.1.12356.101.12.2.3.1.1
-      indexes:
-      - labelname: fgVdEntIndex
-        type: gauge
-      enum_values:
-        1: disabled
-        2: enabled
-    - name: fgVpnSslStatsLoginUsers
-      oid: 1.3.6.1.4.1.12356.101.12.2.3.1.2
-      type: gauge
-      help: The current number of users logged in through SSL-VPN tunnels in the virtual
-        domain - 1.3.6.1.4.1.12356.101.12.2.3.1.2
-      indexes:
-      - labelname: fgVdEntIndex
-        type: gauge
-    - name: fgVpnSslStatsMaxUsers
-      oid: 1.3.6.1.4.1.12356.101.12.2.3.1.3
-      type: counter
-      help: The maximum number of total users that can be logged in at any one time
-        on the virtual domain - 1.3.6.1.4.1.12356.101.12.2.3.1.3
-      indexes:
-      - labelname: fgVdEntIndex
-        type: gauge
-    - name: fgVpnSslStatsActiveWebSessions
-      oid: 1.3.6.1.4.1.12356.101.12.2.3.1.4
-      type: gauge
-      help: The current number of active SSL web sessions in the virtual domain -
-        1.3.6.1.4.1.12356.101.12.2.3.1.4
-      indexes:
-      - labelname: fgVdEntIndex
-        type: gauge
-    - name: fgVpnSslStatsMaxWebSessions
-      oid: 1.3.6.1.4.1.12356.101.12.2.3.1.5
-      type: counter
-      help: The maximum number of active SSL web sessions at any one time within the
-        virtual domain - 1.3.6.1.4.1.12356.101.12.2.3.1.5
-      indexes:
-      - labelname: fgVdEntIndex
-        type: gauge
-    - name: fgVpnSslStatsActiveTunnels
-      oid: 1.3.6.1.4.1.12356.101.12.2.3.1.6
-      type: gauge
-      help: The current number of active SSL tunnels in the virtual domain - 1.3.6.1.4.1.12356.101.12.2.3.1.6
-      indexes:
-      - labelname: fgVdEntIndex
-        type: gauge
-    - name: fgVpnSslStatsMaxTunnels
-      oid: 1.3.6.1.4.1.12356.101.12.2.3.1.7
-      type: counter
-      help: The maximum number of active SSL tunnels at any one time in the virtual
-        domain - 1.3.6.1.4.1.12356.101.12.2.3.1.7
-      indexes:
-      - labelname: fgVdEntIndex
-        type: gauge
-    - name: fgVpnSslTunnelIndex
-      oid: 1.3.6.1.4.1.12356.101.12.2.4.1.1
-      type: gauge
-      help: An index value that uniquely identifies an active SSL VPN tunnel within
-        the fgVpnSslTunnelTable - 1.3.6.1.4.1.12356.101.12.2.4.1.1
-      indexes:
-      - labelname: fgVpnSslTunnelIndex
-        type: gauge
-    - name: fgVpnSslTunnelVdom
-      oid: 1.3.6.1.4.1.12356.101.12.2.4.1.2
-      type: gauge
-      help: The index of the virtual domain this tunnel belongs to - 1.3.6.1.4.1.12356.101.12.2.4.1.2
-      indexes:
-      - labelname: fgVpnSslTunnelIndex
-        type: gauge
-    - name: fgVpnSslTunnelUserName
-      oid: 1.3.6.1.4.1.12356.101.12.2.4.1.3
-      type: DisplayString
-      help: The user name used to authenticate the tunnel - 1.3.6.1.4.1.12356.101.12.2.4.1.3
-      indexes:
-      - labelname: fgVpnSslTunnelIndex
-        type: gauge
-    - name: fgVpnSslTunnelSrcIp
-      oid: 1.3.6.1.4.1.12356.101.12.2.4.1.4
-      type: InetAddressIPv4
-      help: The source IP address of this tunnel - 1.3.6.1.4.1.12356.101.12.2.4.1.4
-      indexes:
-      - labelname: fgVpnSslTunnelIndex
-        type: gauge
-    - name: fgVpnSslTunnelIp
-      oid: 1.3.6.1.4.1.12356.101.12.2.4.1.5
-      type: InetAddressIPv4
-      help: The connection IP address of this tunnel - 1.3.6.1.4.1.12356.101.12.2.4.1.5
-      indexes:
-      - labelname: fgVpnSslTunnelIndex
-        type: gauge
-    - name: fgVpnSslTunnelUpTime
-      oid: 1.3.6.1.4.1.12356.101.12.2.4.1.6
-      type: counter
-      help: The up-time of this tunnel in seconds - 1.3.6.1.4.1.12356.101.12.2.4.1.6
-      indexes:
-      - labelname: fgVpnSslTunnelIndex
-        type: gauge
-    - name: fgVpnSslTunnelBytesIn
-      oid: 1.3.6.1.4.1.12356.101.12.2.4.1.7
-      type: counter
-      help: The number of incoming bytes of L2 traffic through this tunnel since it
-        was established - 1.3.6.1.4.1.12356.101.12.2.4.1.7
-      indexes:
-      - labelname: fgVpnSslTunnelIndex
-        type: gauge
-    - name: fgVpnSslTunnelBytesOut
-      oid: 1.3.6.1.4.1.12356.101.12.2.4.1.8
-      type: counter
-      help: The number of outgoing bytes of L2 traffic through this tunnel since it
-        was established - 1.3.6.1.4.1.12356.101.12.2.4.1.8
-      indexes:
-      - labelname: fgVpnSslTunnelIndex
-        type: gauge
+      lookups:
+      - labels:
+        - ifIndex
+        labelname: ifDescr
+        oid: 1.3.6.1.2.1.2.2.1.2
+        type: DisplayString
+      - labels:
+        - ifIndex
+        labelname: ifName
+        oid: 1.3.6.1.2.1.31.1.1.1.1
+        type: DisplayString
     - name: fgSysVersion
       oid: 1.3.6.1.4.1.12356.101.4.1.1
       type: DisplayString
@@ -6371,37 +5977,6 @@ modules:
         labelname: ifName
         oid: 1.3.6.1.2.1.31.1.1.1.1
         type: DisplayString
-    - name: fgIntfVlanHbEntIndex
-      oid: 1.3.6.1.4.1.12356.101.7.4.2.1.1
-      type: gauge
-      help: A unique identifier within the fgIntfVlanHbTable - 1.3.6.1.4.1.12356.101.7.4.2.1.1
-      indexes:
-      - labelname: fgIntfVlanHbEntIndex
-        type: gauge
-    - name: fgIntfVlanHbEntIfName
-      oid: 1.3.6.1.4.1.12356.101.7.4.2.1.2
-      type: DisplayString
-      help: The vlan interface name. - 1.3.6.1.4.1.12356.101.7.4.2.1.2
-      indexes:
-      - labelname: fgIntfVlanHbEntIndex
-        type: gauge
-    - name: fgIntfVlanHbEntSerial
-      oid: 1.3.6.1.4.1.12356.101.7.4.2.1.3
-      type: DisplayString
-      help: Serial number of a vlan HA peer. - 1.3.6.1.4.1.12356.101.7.4.2.1.3
-      indexes:
-      - labelname: fgIntfVlanHbEntIndex
-        type: gauge
-    - name: fgIntfVlanHbEntState
-      oid: 1.3.6.1.4.1.12356.101.7.4.2.1.4
-      type: gauge
-      help: State of a vlan interface heartbeat. - 1.3.6.1.4.1.12356.101.7.4.2.1.4
-      indexes:
-      - labelname: fgIntfVlanHbEntIndex
-        type: gauge
-      enum_values:
-        1: active
-        2: inactive
   sophos_device:
     walk:
     - 1.3.6.1.2.1.1
